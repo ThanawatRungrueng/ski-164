@@ -16,13 +16,13 @@ public class TREE : MonoBehaviour
         script player = collision.gameObject.GetComponent<script>();
         player.HP -= 15;
 
-        Main_UI.instance.ShowNotiText("baby don't hurt me"+player.HP);
+      //  Main_UI.instance.ShowNotiText("baby don't hurt me"+player.HP);
+      Main_UI.instance.ShowNotiText($"Hurt-15\n HP:{player.HP}");
         if (player.HP <= 0)
         {
             player.HP = 0;
-            Main_UI.instance.ShowNotiText("you gay");
+            Main_UI.instance.ShowNotiText("died");
         }    
-      
     }
     private void OnCollisionExit(Collision collision)
     {
