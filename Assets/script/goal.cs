@@ -6,6 +6,6 @@ public class goal : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        
+        Main_UI.instance.ShowNotiText("STUPID WIN");
     }
 }

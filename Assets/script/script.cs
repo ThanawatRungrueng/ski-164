@@ -14,7 +14,11 @@ public class script : MonoBehaviour
     [SerializeField]
     private float xpower;
     [SerializeField]
-  
+
+    private int hp = 100;
+    [SerializeField]
+
+    public int HP { get { return hp; } set { hp = value; } }
     float Increment;
     // Start is called before the first frame update
     void Start()
