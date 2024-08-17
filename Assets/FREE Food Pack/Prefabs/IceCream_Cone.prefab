@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4000010356322748}
   - component: {fileID: 33000012468301878}
   - component: {fileID: 23000013980861980}
+  - component: {fileID: 3805190179829284081}
   m_Layer: 0
   m_Name: IceCream_Cone
   m_TagString: Untagged
@@ -83,3 +84,15 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3805190179829284081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013122234568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 615eadd1a6ca7934da72f0f39d8777bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
