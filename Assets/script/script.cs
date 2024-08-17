@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class script : MonoBehaviour
 {
@@ -10,39 +11,83 @@ public class script : MonoBehaviour
     private Rigidbody rb;
 
     [SerializeField]
-    int forcePower;
+    private int forcePower;
+
+
 
     [SerializeField]
     private float xpower;
-    [SerializeField]
 
-    private int hp = 100;
     [SerializeField]
+    private float increment;
 
-    private int point = 0;
     [SerializeField]
+    private int maxHealth = 100; // จำนวนเลือดสูงสุดของผู้เล่น
+    private int currentHealth; // จำนวนเลือดปัจจุบันของผู้เล่น
 
-    public int HP { get { return hp; } set { hp = value; } }
-    public int POINT { get { return point; } set { point = value; } }
-    float Increment;
+    public Text loseText; // ข้อความที่จะแสดงเมื่อผู้เล่นแพ้
+
+    public Text winText; // ข้อความที่จะแสดงเมื่อผู้เล่นชนะ
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        currentHealth = maxHealth; // เริ่มต้นด้วยเลือดเต็ม
+        loseText.enabled = false; // ซ่อนข้อความแพ้
     }
 
     // Update is called once per frame
     void Update()
     {
-       
-     MoveLeft();
-       
+        MoveLeft();
+        // สามารถเพิ่มการจัดการการรับความเสียหายที่นี่ถ้าต้องการ
     }
+
     public void MoveLeft()
     {
         xpower = Input.GetAxis("Horizontal");
         rb.AddForce(xpower * Vector3.right * forcePower);
     }
-  
- 
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage; // ลดจำนวนเลือดเมื่อได้รับความเสียหาย
+
+        if (currentHealth <= 0)
+        {
+            PlayerLose();
+        }
+    }
+
+    void PlayerLose()
+    {
+        loseText.text = "You Lose!";
+        loseText.enabled = true;
+
+        // ลบผู้เล่นออกจากเกม
+        Destroy(gameObject);
+
+        // หยุดการอัพเดตเกม
+        Time.timeScale = 0;
+    }
+    void PlayerWin()
+    {
+        winText.text = "You Win!";
+        winText.enabled = true;
+
+        // หยุดการอัพเดตเกม (หรือทำสิ่งอื่น ๆ ตามที่ต้องการ)
+        Time.timeScale = 0;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("WinObject"))
+        {
+            PlayerWin();
+        }
+        else if (collision.gameObject.CompareTag("Enemy"))
+        {
+            TakeDamage(1); // ลดเลือดลง 10 หน่วยเมื่อชนกับวัตถุที่มี Tag เป็น "Enemy"
+        }
+    }
 }
