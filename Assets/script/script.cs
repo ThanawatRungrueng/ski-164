@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
+using UnityEngine.SceneManagement;  
 
 public class script : MonoBehaviour
 {
@@ -11,34 +11,42 @@ public class script : MonoBehaviour
     private Rigidbody rb;
 
     [SerializeField]
-    private int forcePower;
+    int forcePower;
 
     [SerializeField]
     private float xpower;
 
     [SerializeField]
-    private int maxHealth = 100; // จำนวนเลือดสูงสุดของผู้เล่น
-    private int currentHealth; // จำนวนเลือดปัจจุบันของผู้เล่น
+    private int hp = 100;
 
-    public Text loseText; // ข้อความที่จะแสดงเมื่อผู้เล่นแพ้
-    public Text winText; // ข้อความที่จะแสดงเมื่อผู้เล่นชนะ
-    public Text scoreText; // ข้อความที่จะแสดงคะแนน
+    [SerializeField]
+    private int point = 0;
 
-    private int score = 0; // จำนวนคะแนนเริ่มต้น
+    [SerializeField]
+    public int HP { get { return hp; } set { hp = value; } }
+
+    public int POINT { get { return point; } set { point = value; } }
+
+    [SerializeField]
+    private Camera firstPersonCamera; // กล้องมุมมองบุคคลที่หนึ่ง
+
+    [SerializeField]
+    private Camera thirdPersonCamera; // กล้องมุมมองบุคคลที่สาม
+
+    private bool isFirstPerson = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        currentHealth = maxHealth; // เริ่มต้นด้วยเลือดเต็ม
-        loseText.enabled = false; // ซ่อนข้อความแพ้
-        winText.enabled = false; // ซ่อนข้อความชนะ
-
-        UpdateScoreText(); // แสดงคะแนนเริ่มต้น
+        SwitchToThirdPerson(); // เริ่มต้นที่มุมมองบุคคลที่สาม
     }
 
     void Update()
     {
         MoveLeft();
+        CheckRestart();
+        CheckHP();
+        CheckCameraToggle(); // เพิ่มเพื่อสลับมุมกล้อง
     }
 
     public void MoveLeft()
@@ -47,46 +55,49 @@ public class script : MonoBehaviour
         rb.AddForce(xpower * Vector3.right * forcePower);
     }
 
-    public void TakeDamage(int damage)
+    private void CheckRestart()
     {
-        currentHealth -= damage; // ลดจำนวนเลือดเมื่อได้รับความเสียหาย
-
-        if (currentHealth <= 0)
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            PlayerLose();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
-    void PlayerLose()
+    private void CheckHP()
     {
-        loseText.text = "You Lose!";
-        loseText.enabled = true;
-
-        Destroy(gameObject);
-
-        Time.timeScale = 0;
-    }
-
-    void PlayerWin()
-    {
-        winText.text = "You Win!";
-        winText.enabled = true;
-
-        Time.timeScale = 0;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Coin"))
+        if (hp <= 0)
         {
-            score += 1; // เพิ่มคะแนน
-            UpdateScoreText(); // อัปเดตการแสดงผลคะแนน
-            Destroy(other.gameObject); // ทำลายเหรียญ
+            Destroy(gameObject);
         }
     }
 
-    void UpdateScoreText()
+    // ตรวจสอบการกดปุ่ม "V" เพื่อสลับมุมกล้อง
+    private void CheckCameraToggle()
     {
-        scoreText.text = "Score: " + score.ToString(); // อัปเดตข้อความใน UI
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            isFirstPerson = !isFirstPerson;
+
+            if (isFirstPerson)
+            {
+                SwitchToFirstPerson();
+            }
+            else
+            {
+                SwitchToThirdPerson();
+            }
+        }
+    }
+
+    private void SwitchToFirstPerson()
+    {
+        firstPersonCamera.enabled = true;
+        thirdPersonCamera.enabled = false;
+    }
+
+    private void SwitchToThirdPerson()
+    {
+        firstPersonCamera.enabled = false;
+        thirdPersonCamera.enabled = true;
     }
 }

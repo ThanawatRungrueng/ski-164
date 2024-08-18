@@ -1,21 +1,18 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Coin : MonoBehaviour
+public class coin : MonoBehaviour
 {
-    public int score = 0;
+    // Start is called before the first frame upda
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Coin"))
-        {
-            // ‡æ‘Ë¡§–·ππ
-            score += 1;
-
-            // ∑”≈“¬‡À√’¬≠
-            Destroy(other.gameObject);
-        }
+        // ‡∏ï‡∏£‡∏ß‡∏à‡∏™‡∏≠‡∏ö‡∏ß‡πà‡∏≤‡∏ä‡∏ô‡∏Å‡∏±‡∏ö‡∏ú‡∏π‡πâ‡πÄ‡∏•‡πà‡∏ô (Player)
+     script player = other.GetComponent<script>();
+        player.POINT += 10;
+        Main_UI.instance.ShowNotiText($"+10\nScroe{player.POINT}");
+        Destroy( gameObject );
+         
     }
 }
-
