@@ -17,20 +17,15 @@ public class script : MonoBehaviour
     private float xpower;
 
     [SerializeField]
-    private float increment;
-
-    [SerializeField]
     private int maxHealth = 100; // จำนวนเลือดสูงสุดของผู้เล่น
     private int currentHealth; // จำนวนเลือดปัจจุบันของผู้เล่น
 
     public Text loseText; // ข้อความที่จะแสดงเมื่อผู้เล่นแพ้
     public Text winText; // ข้อความที่จะแสดงเมื่อผู้เล่นชนะ
-
-    // เพิ่มตัวแปรสำหรับการจัดการคะแนน
     public Text scoreText; // ข้อความที่จะแสดงคะแนน
+
     private int score = 0; // จำนวนคะแนนเริ่มต้น
 
-    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -41,11 +36,9 @@ public class script : MonoBehaviour
         UpdateScoreText(); // แสดงคะแนนเริ่มต้น
     }
 
-    // Update is called once per frame
     void Update()
     {
         MoveLeft();
-        // สามารถเพิ่มการจัดการการรับความเสียหายที่นี่ถ้าต้องการ
     }
 
     public void MoveLeft()
@@ -69,10 +62,8 @@ public class script : MonoBehaviour
         loseText.text = "You Lose!";
         loseText.enabled = true;
 
-        // ลบผู้เล่นออกจากเกม
         Destroy(gameObject);
 
-        // หยุดการอัพเดตเกม
         Time.timeScale = 0;
     }
 
@@ -81,20 +72,7 @@ public class script : MonoBehaviour
         winText.text = "You Win!";
         winText.enabled = true;
 
-        // หยุดการอัพเดตเกม (หรือทำสิ่งอื่น ๆ ตามที่ต้องการ)
         Time.timeScale = 0;
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("WinObject"))
-        {
-            PlayerWin();
-        }
-        else if (collision.gameObject.CompareTag("Enemy"))
-        {
-            TakeDamage(10); // ลดเลือดลง 10 หน่วยเมื่อชนกับวัตถุที่มี Tag เป็น "Enemy"
-        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -112,4 +90,3 @@ public class script : MonoBehaviour
         scoreText.text = "Score: " + score.ToString(); // อัปเดตข้อความใน UI
     }
 }
-
